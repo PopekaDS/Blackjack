@@ -107,73 +107,6 @@ def main():
         input('Press Enter to continue...')
         print('\n\n')
 
-
-def displayHands(playerHand, dealerHand, showDealerHand):
-    """Show the player's and dealer's cards. Hide the dealer's first
-    card if showDealerHand is False."""
-    print()
-    if showDealerHand:
-        print('DEALER:', getHandValue(dealerHand))
-        displayCards(dealerHand)
-    else:
-        print('DEALER: ???')
-        # Hide the dealer's first card:
-        displayCards([BACKSIDE] + dealerHand[1:])
-
-    # Show the player's cards:
-    print('PLAYER:', getHandValue(playerHand))
-    displayCards(playerHand)
-
-
-def getHandValue(cards):
-    """Returns the value of the cards. Face cards are worth 10, aces are
-    worth 11 or 1 (this function picks the most suitable ace value)."""
-    value = 0
-    numberOfAces = 0
-
-    # Add the value for the non-ace cards:
-    for card in cards:
-        rank = card[0]  # card is a tuple like (rank, suit)
-        if rank == 'A':
-            numberOfAces += 1
-        elif rank in ('K', 'Q', 'J'):  # Face cards are worth 10 points.
-            value += 10
-        else:
-            value += int(rank)  # Numbered cards are worth their number.
-
-    # Add the value for the aces:
-    value += numberOfAces  # Add 1 per ace.
-    for i in range(numberOfAces):
-        # If another 10 can be added without busting, do so:
-        if value + 10 <= 21:
-            value += 10
-
-    return value
-
-
-def displayCards(cards):
-    """Display all the cards in the cards list."""
-    rows = ['', '', '', '', '']  # The text to display on each row.
-
-    for i, card in enumerate(cards):
-        rows[0] += ' ___  '  # Print the top line of the card.
-        if card == BACKSIDE:
-            # Print a card's back:
-            rows[1] += '|## | '
-            rows[2] += '|###| '
-            rows[3] += '|_##| '
-        else:
-            # Print the card's front:
-            rank, suit = card  # The card is a tuple data structure.
-            rows[1] += '|{} | '.format(rank.ljust(2))
-            rows[2] += '| {} | '.format(suit)
-            rows[3] += '|_{}| '.format(rank.rjust(2, '_'))
-
-    # Print each row on the screen:
-    for row in rows:
-        print(row)
-
-
 def getMove(playerHand, money):
     """Asks the player for their move, and returns 'H' for hit, 'S' for
     stand, and 'D' for double down."""
@@ -216,6 +149,80 @@ char CLUBS = 5; // Character 9824 is '♠'.
 char SPADES = 6; // Character 9827 is '♣'.
 string BACKSIDE = "backside";
 // (A list of chr codes is at https://inventwithpython.com/charactermap)
+
+int getBet(int maxBet);
+vector <string> getDeck();
+int getHandValue(vector <string> cards);
+void displayCards(vector <string> cards);
+void displayHands(vector <string> playerHand, vector <string> dealerHand, bool showDealerHand);
+
+int main() {
+    vector <string> t = getDeck();
+    vector <string> tmp;
+    for (int i = 0; i < 2; ++i) {
+        tmp.push_back(t[i]);
+    }
+
+    cout << getHandValue(tmp) << endl;
+    displayCards(tmp);
+
+    return 0;
+}
+
+int getHandValue(vector <string> cards) {
+    // Returns the value of the cards. Face cards are worth 10, aces are
+    // worth 11 or 1 (this function picks the most suitable ace value).
+    int value = 0;
+    int numberOfAces = 0;
+    // Add the value for the non-ace cards:
+    for (string card : cards) {
+        char rank = card[0]; // card is a tuple like(rank, suit)
+        if (rank == 'A') {
+            numberOfAces += 1;
+        } else if (rank == 'K' || rank == 'Q' || rank == 'J') { // Face cards are worth 10 points.
+            value += 10;
+        } else {
+            value += int(rank - '0'); // Numbered cards are worth their number.
+        }
+    }
+
+    // Add the value for the aces:
+    value += numberOfAces; // Add 1 per ace.
+    for (int i = 0; i < numberOfAces; ++i) { 
+        // If another 10 can be added without busting, do so:
+        if (value + 10 <= 21) {
+            value += 10;
+        }
+    }
+
+    return value;
+}
+
+void displayCards(vector <string> cards) {
+    // Display all the cards in the cards list.
+    vector<string> rows = { "", "", "", "", "" }; // The text to display on each row.
+    for (string card : cards) {
+        rows[0] += "  ___  "; // Print the top line of the card.
+        if (card == BACKSIDE) {
+            // Print a card's back:
+            rows[1] += " |## | ";
+            rows[2] += " |###| ";
+            rows[3] += " |_##| ";
+        } else {
+            // Print the card's front:
+            char rank = card[0], suit = card[1]; // The card is a tuple data structure.
+            rows[1] = rows[1] + " |" + rank + "  | ";
+            rows[2] = rows[2] + " | " + suit + " | ";
+            rows[3] = rows[3] + " |__" + rank + "| ";
+        }
+    }
+
+    // Print each row on the screen:
+    for (auto row : rows) {
+        cout << row << '\n';
+    }
+    cout << '\n';
+}
 
 int getBet(int maxBet) {
     // Ask the player how much they want to bet for this round.
@@ -298,12 +305,22 @@ vector <string> getDeck() {
     return deck;
 }
 
-
-int main() {
-    vector <string> t = getDeck();
-    for (auto now : t) {
-        cout << now << " ";
+void displayHands(vector <string> playerHand, vector <string> dealerHand, bool showDealerHand) {
+    // Show the player's and dealer's cards. Hide the dealer's first
+    // card if showDealerHand is False.
+    cout << '\n';
+    if (showDealerHand) {
+        cout << "DEALER:\n";
+        cout << getHandValue(dealerHand) << "\n";
+        displayCards(dealerHand);
+    } else {
+        cout << "DEALER: ???\n";
+        // Hide the dealer's first card:
+        // displayCards([BACKSIDE] + dealerHand[1:]) 
     }
 
-    return 0;
+    // Show the player's cards:
+    cout << "PLAYER:\n";
+    cout << getHandValue(playerHand) << "\n";
+    displayCards(playerHand);
 }
