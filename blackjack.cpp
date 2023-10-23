@@ -5,19 +5,6 @@ import random, sys
 
 
 def main():
-    print('''Blackjack, by Al Sweigart al@inventwithpython.com
-
-    Rules:
-      Try to get as close to 21 without going over.
-      Kings, Queens, and Jacks are worth 10 points.
-      Aces are worth 1 or 11 points.
-      Cards 2 through 10 are worth their face value.
-      (H)it to take another card.
-      (S)tand to stop taking cards.
-      On your first play, you can (D)ouble down to increase your bet
-      but must hit exactly one more time before standing.
-      In case of a tie, the bet is returned to the player.
-      The dealer stops hitting at 17.''')
 
     money = 5000
     while True:  # Main game loop.
@@ -107,25 +94,7 @@ def main():
         input('Press Enter to continue...')
         print('\n\n')
 
-def getMove(playerHand, money):
-    """Asks the player for their move, and returns 'H' for hit, 'S' for
-    stand, and 'D' for double down."""
-    while True:  # Keep looping until the player enters a correct move.
-        # Determine what moves the player can make:
-        moves = ['(H)it', '(S)tand']
 
-        # The player can double down on their first move, which we can
-        # tell because they'll have exactly two cards:
-        if len(playerHand) == 2 and money > 0:
-            moves.append('(D)ouble down')
-
-        # Get the player's move:
-        movePrompt = ', '.join(moves) + '> '
-        move = input(movePrompt).upper()
-        if move in ('H', 'S'):
-            return move  # Player has entered a valid move.
-        if move == 'D' and '(D)ouble down' in moves:
-            return move  # Player has entered a valid move.
 
 */
 
@@ -155,16 +124,36 @@ vector <string> getDeck();
 int getHandValue(vector <string> cards);
 void displayCards(vector <string> cards);
 void displayHands(vector <string> playerHand, vector <string> dealerHand, bool showDealerHand);
+string getMove(vector <string> playerHand, int money) {
 
 int main() {
-    vector <string> t = getDeck();
-    vector <string> tmp;
-    for (int i = 0; i < 2; ++i) {
-        tmp.push_back(t[i]);
-    }
+    cout << "Blackjack, by Al Sweigart al@inventwithpython.com\n";
+    cout << "Rules :\n";
+    cout << "\tTry to get as close to 21 without going over.\n";
+    cout << "\tKings, Queens, and Jacks are worth 10 points.\n";
+    cout << "\tAces are worth 1 or 11 points.\n";
+    cout << "\tCards 2 through 10 are worth their face value.\n";
+    cout << "\t(H)it to take another card.\n";
+    cout << "\t(S)tand to stop taking cards.\n";
+    cout << "\tOn your first play, you can(D)ouble down to increase your bet\n";
+    cout << "\tbut must hit exactly one more time before standing.\n";
+    cout << "\tIn case of a tie, the bet is returned to the player.\n";
+    cout << "\tThe dealer stops hitting at 17.\n";
+    cout << "\t\n";
+    cout << "\t\n";
+        
 
-    cout << getHandValue(tmp) << endl;
-    displayCards(tmp);
+        
+    
+        
+        
+        
+        
+        
+        
+        
+   
+        
 
     return 0;
 }
@@ -323,4 +312,36 @@ void displayHands(vector <string> playerHand, vector <string> dealerHand, bool s
     cout << "PLAYER:\n";
     cout << getHandValue(playerHand) << "\n";
     displayCards(playerHand);
+}
+
+string getMove(vector <string> playerHand, int money) {
+    // Asks the player for their move, and returns 'H' for hit, 'S' for
+    // stand, and 'D' for double down.
+    while (1) { // Keep looping until the player enters a correct move.
+        // Determine what moves the player can make:
+        vector <string> moves = { "(H)it", "(S)tand" };
+        // The player can double down on their first move, which we can
+        // tell because they'll have exactly two cards:
+        bool Doubledown = false;
+        if (playerHand.size() == 2 && money > 0) {
+            moves.push_back("(D)ouble down");
+            Doubledown = true;
+        }
+
+        // Get the player's move:
+        cout << "(H)it, (S)tand";
+        if (Doubledown) {
+            cout << ", (D)ouble down";
+        }
+        cout << " > ";
+        string move = "";
+        getline(cin, move);
+        transform(move.begin(), move.end(), move.begin(), ::toupper);
+        if (move == "H" || move == "S") {
+            return move; // Player has entered a valid move.
+        }
+        if (move == "D" && Doubledown) {
+            return move; // Player has entered a valid move.
+        }
+    }
 }
