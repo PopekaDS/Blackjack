@@ -6,59 +6,21 @@ import random, sys
 
 def main():
 
-    money = 5000
-    while True:  # Main game loop.
-        # Check if the player has run out of money:
-        if money <= 0:
-            print("You're broke!")
-            print("Good thing you weren't playing with real money.")
-            print('Thanks for playing!')
-            sys.exit()
+    
+    while True:
 
-        # Let the player enter their bet for this round:
-        print('Money:', money)
-        bet = getBet(money)
 
-        # Give the dealer and player two cards from the deck each:
-        deck = getDeck()
-        dealerHand = [deck.pop(), deck.pop()]
-        playerHand = [deck.pop(), deck.pop()]
+        while True:  # 
+            
+            
 
-        # Handle player actions:
-        print('Bet:', bet)
-        while True:  # Keep looping until player stands or busts.
-            displayHands(playerHand, dealerHand, False)
-            print()
+            
+            
+            
 
-            # Check if the player has bust:
-            if getHandValue(playerHand) > 21:
-                break
 
-            # Get the player's move, either H, S, or D:
-            move = getMove(playerHand, money - bet)
 
-            # Handle the player actions:
-            if move == 'D':
-                # Player is doubling down, they can increase their bet:
-                additionalBet = getBet(min(bet, (money - bet)))
-                bet += additionalBet
-                print('Bet increased to {}.'.format(bet))
-                print('Bet:', bet)
 
-            if move in ('H', 'D'):
-                # Hit/doubling down takes another card.
-                newCard = deck.pop()
-                rank, suit = newCard
-                print('You drew a {} of {}.'.format(rank, suit))
-                playerHand.append(newCard)
-
-                if getHandValue(playerHand) > 21:
-                    # The player has busted:
-                    continue
-
-            if move in ('S', 'D'):
-                # Stand/doubling down stops the player's turn.
-                break
 
         # Handle the dealer's actions:
         if getHandValue(playerHand) <= 21:
@@ -124,7 +86,7 @@ vector <string> getDeck();
 int getHandValue(vector <string> cards);
 void displayCards(vector <string> cards);
 void displayHands(vector <string> playerHand, vector <string> dealerHand, bool showDealerHand);
-string getMove(vector <string> playerHand, int money) {
+string getMove(vector <string> playerHand, int money);
 
 int main() {
     cout << "Blackjack, by Al Sweigart al@inventwithpython.com\n";
@@ -141,14 +103,80 @@ int main() {
     cout << "\tThe dealer stops hitting at 17.\n";
     cout << "\t\n";
     cout << "\t\n";
+    int money = 5000;
+    // Check if the player has run out of money :
+    while (1) { // Main game loop.
+        if (money <= 0) {
+            cout << "You're broke!\n";
+            cout << "Good thing you weren't playing with real money.\n";
+            cout << "Thanks for playing!\n";
+            return 0;
+        }
         
+        // Let the player enter their bet for this round:
+        std::cout << "Money: " << money << '\n';
+        int bet = getBet(money);
 
+        // Give the dealer and player two cards from the deck each:
+        vector <string> deck = getDeck();
+        int i = 0;
+        vector <string> dealerHand = { deck[++i], deck[++i] }; // dealerHand = [deck.pop(), deck.pop()]
+        vector <string> playerHand = { deck[++i], deck[++i] }; // playerHand = [deck.pop(), deck.pop()]
+
+        // Handle player actions :
+        cout << "Bet: " << bet << '\n';
+        while (1) {
+            // Keep looping until player stands or busts.
+            displayHands(playerHand, dealerHand, false);
+            cout << '\n';
+
+            // Check if the player has bust :
+            if (getHandValue(playerHand) > 21) {
+                break;
+            }
+
+            // Get the player's move, either H, S, or D:
+            string move = getMove(playerHand, money - bet);
+
+            // Handle the player actions :
+            if (move == "D") {
+                // Player is doubling down, they can increase their bet:
+                int additionalBet;
+                if (bet < money - bet) {
+                    additionalBet = bet;
+                } else {
+                    additionalBet = money - bet;
+                }
+                additionalBet = getBet(additionalBet);
+                bet += additionalBet;
+                cout << "Bet increased to " << bet << '\n';
+                cout << "Bet: " << bet << '\n';
+            }
+
+            if (move == "H" || move == "D") {
+                // Hit / doubling down takes another card.
+                string newCard = deck[++i];
+                //string rank = newCard[0], suit = newCard[1];
+                //cout << "You drew a " << rank << " of " << suit << ".\n";
+                playerHand.push_back(newCard);
+
+                if (getHandValue(playerHand) > 21) {
+                    // The player has busted :
+                    continue;
+                }
+            }
+
+            if (move == "S" || move == "D") {
+                // Stand / doubling down stops the player's turn.
+                break;
+            }
+
+        }
         
+    }
     
         
-        
-        
-        
+          
         
         
         
