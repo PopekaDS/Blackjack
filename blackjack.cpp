@@ -1,66 +1,4 @@
-﻿/*
-import random, sys
-
-
-
-
-def main():
-
-    
-    while True:
-
-
-        while True:  # 
-            
-            
-
-            
-            
-            
-
-
-
-
-
-        # Handle the dealer's actions:
-        if getHandValue(playerHand) <= 21:
-            while getHandValue(dealerHand) < 17:
-                # The dealer hits:
-                print('Dealer hits...')
-                dealerHand.append(deck.pop())
-                displayHands(playerHand, dealerHand, False)
-
-                if getHandValue(dealerHand) > 21:
-                    break  # The dealer has busted.
-                input('Press Enter to continue...')
-                print('\n\n')
-
-        # Show the final hands:
-        displayHands(playerHand, dealerHand, True)
-
-        playerValue = getHandValue(playerHand)
-        dealerValue = getHandValue(dealerHand)
-        # Handle whether the player won, lost, or tied:
-        if dealerValue > 21:
-            print('Dealer busts! You win ${}!'.format(bet))
-            money += bet
-        elif (playerValue > 21) or (playerValue < dealerValue):
-            print('You lost!')
-            money -= bet
-        elif playerValue > dealerValue:
-            print('You won ${}!'.format(bet))
-            money += bet
-        elif playerValue == dealerValue:
-            print('It\'s a tie, the bet is returned to you.')
-
-        input('Press Enter to continue...')
-        print('\n\n')
-
-
-
-*/
-
-// Blackjack, by Al Sweigart al@inventwithpython.com
+﻿// Blackjack, by Al Sweigart al@inventwithpython.com
 // The classic card game also known as 21. (This version doesn't have
 //     splitting or insurance.)
 //     More info at : https://en.wikipedia.org/wiki/Blackjack
@@ -172,17 +110,51 @@ int main() {
             }
 
         }
-        
-    }
-    
-        
-          
-        
-        
-        
-   
-        
 
+        // Handle the dealer's actions:
+        if (getHandValue(playerHand) <= 21) {
+            while (getHandValue(dealerHand) < 17) {
+                // The dealer hits:
+                cout << "Dealer hits...\n";
+                dealerHand.push_back(deck[++i]);
+                displayHands(playerHand, dealerHand, false);
+
+                if (getHandValue(dealerHand) > 21) {
+                    break; // The dealer has busted.
+                }
+                cout << "'Press Enter to continue...\n";
+                string str;
+                getline(cin, str);
+                cout << "\n\n";
+            }
+        }
+
+        // Show the final hands:
+        displayHands(playerHand, dealerHand, true);
+        
+        int playerValue = getHandValue(playerHand);
+        int dealerValue = getHandValue(dealerHand);
+
+        // Handle whether the player won, lost, or tied:
+        if (dealerValue > 21) {
+            cout << "Dealer busts! You win $" << bet << "!\n";
+            money += bet;
+        } else if (playerValue > 21 || playerValue < dealerValue) {
+            cout << "You lost!\n";
+            money -= bet;
+        } else if (playerValue > dealerValue) {
+            cout << "You won $" << bet << "!\n";
+            money += bet;
+        } else if (playerValue == dealerValue) {
+            cout << "It\'s a tie, the bet is returned to you.\n";
+        }
+
+        cout << "'Press Enter to continue...\n";
+        string space;
+        getline(cin, space);
+        cout << "\n\n";
+    }
+      
     return 0;
 }
 
