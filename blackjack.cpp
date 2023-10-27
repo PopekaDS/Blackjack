@@ -1,8 +1,9 @@
-﻿// Blackjack, by Al Sweigart al@inventwithpython.com
+﻿// Blackjack, by Al Sweigart
 // The classic card game also known as 21. (This version doesn't have
 //     splitting or insurance.)
 //     More info at : https://en.wikipedia.org/wiki/Blackjack
 // This code is available at https ://nostarch.com/big-book-small-python-programming
+// #4 BLACKJACK
 
 #include <iostream>
 #include <string>
@@ -11,13 +12,12 @@
 #include <random>
 using namespace std;
 
-// Set up the constants :
-char HEARTS = 3; // Character 9829 is '♥'.
-char DIAMONDS = 4; // Character 9830 is '♦'.
-char CLUBS = 5; // Character 9824 is '♠'.
-char SPADES = 6; // Character 9827 is '♣'.
+// Set up the constants:
+char HEARTS = 3; // Character is '♥'.
+char DIAMONDS = 4; // Character is '♦'.
+char CLUBS = 5; // Character is '♠'.
+char SPADES = 6; // Character is '♣'.
 string BACKSIDE = "backside";
-// (A list of chr codes is at https://inventwithpython.com/charactermap)
 
 int getBet(int maxBet);
 vector <string> getDeck();
@@ -42,7 +42,7 @@ int main() {
     cout << "\t\n";
     cout << "\t\n";
     int money = 5000;
-    // Check if the player has run out of money :
+    // Check if the player has run out of money:
     while (1) { // Main game loop.
         if (money <= 0) {
             cout << "You're broke!\n";
@@ -58,17 +58,17 @@ int main() {
         // Give the dealer and player two cards from the deck each:
         vector <string> deck = getDeck();
         int i = 0;
-        vector <string> dealerHand = { deck[++i], deck[++i] }; // dealerHand = [deck.pop(), deck.pop()]
-        vector <string> playerHand = { deck[++i], deck[++i] }; // playerHand = [deck.pop(), deck.pop()]
+        vector <string> dealerHand = { deck[++i], deck[++i] };
+        vector <string> playerHand = { deck[++i], deck[++i] };
 
-        // Handle player actions :
+        // Handle player actions:
         cout << "Bet: " << bet << '\n';
         while (1) {
             // Keep looping until player stands or busts.
             displayHands(playerHand, dealerHand, false);
             cout << '\n';
 
-            // Check if the player has bust :
+            // Check if the player has bust:
             if (getHandValue(playerHand) > 21) {
                 break;
             }
@@ -76,7 +76,7 @@ int main() {
             // Get the player's move, either H, S, or D:
             string move = getMove(playerHand, money - bet);
 
-            // Handle the player actions :
+            // Handle the player actions:
             if (move == "D") {
                 // Player is doubling down, they can increase their bet:
                 int additionalBet;
@@ -94,12 +94,11 @@ int main() {
             if (move == "H" || move == "D") {
                 // Hit / doubling down takes another card.
                 string newCard = deck[++i];
-                //string rank = newCard[0], suit = newCard[1];
-                //cout << "You drew a " << rank << " of " << suit << ".\n";
+                cout << "You drew a " << newCard[0] << " of " << newCard[1] << ".\n"; 
                 playerHand.push_back(newCard);
 
                 if (getHandValue(playerHand) > 21) {
-                    // The player has busted :
+                    // The player has busted:
                     continue;
                 }
             }
@@ -171,7 +170,13 @@ int getHandValue(vector <string> cards) {
         } else if (rank == 'K' || rank == 'Q' || rank == 'J') { // Face cards are worth 10 points.
             value += 10;
         } else {
-            value += int(rank - '0'); // Numbered cards are worth their number.
+            if (card.size() == 2) {
+                value += int(rank - '0'); // Numbered cards are worth their number.
+            } else {
+                value += 10;
+            }
+
+            
         }
     }
 
@@ -199,10 +204,18 @@ void displayCards(vector <string> cards) {
             rows[3] += " |_##| ";
         } else {
             // Print the card's front:
-            char rank = card[0], suit = card[1]; // The card is a tuple data structure.
-            rows[1] = rows[1] + " |" + rank + "  | ";
-            rows[2] = rows[2] + " | " + suit + " | ";
-            rows[3] = rows[3] + " |__" + rank + "| ";
+            if (card.size() == 2) {
+                char rank = card[0], suit = card[1]; // The card is a tuple data structure.
+                rows[1] = rows[1] + " |" + rank + "  | ";
+                rows[2] = rows[2] + " | " + suit + " | ";
+                rows[3] = rows[3] + " |__" + rank + "| ";
+            } else {
+                char rank1 = card[0], rank2 = card[1], suit = card[2]; // The card is a tuple data structure.
+                rows[1] = rows[1] + " |" + rank1 + rank2 + " | ";
+                rows[2] = rows[2] + " | " + suit + " | ";
+                rows[3] = rows[3] + " |_" + rank1 + rank2 + "| ";
+            }
+            
         }
     }
 
@@ -305,7 +318,13 @@ void displayHands(vector <string> playerHand, vector <string> dealerHand, bool s
     } else {
         cout << "DEALER: ???\n";
         // Hide the dealer's first card:
-        // displayCards([BACKSIDE] + dealerHand[1:]) 
+        // void displayCards(vector <string> cards) {
+        // displayCards([BACKSIDE] + dealerHand[1:])  ////******
+        vector <string> response = { BACKSIDE };
+        for (int i = 1; i < dealerHand.size(); ++i) {
+            response.push_back(dealerHand[i]);
+        }
+        displayCards(response);
     }
 
     // Show the player's cards:
